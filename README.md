@@ -1,6 +1,8 @@
 # Pray-Times-API
 Islamic Pray Times APIs.
 
+Param: <code>?address=...&timezone=...&method=...&year=...</code>
+
 <a href="http://ibacor.com/api#bcr-pray-times"><h2>DEMO</h2></a>
 
 PrayTime.php: Prayer Times Calculator (ver 1.2.2)
