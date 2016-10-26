@@ -59,34 +59,93 @@
 			
 			$result['status'] = 'success';
 			
-			$result['data'] = array(
-				'method' => $calculation[$method]['name'],
-				'year' => $year,
-				'address' => $address,
-				'latitude' => $latitude,
-				'longitude' => $longitude,
-				'timezone' => $timeZone
-			);
-
-			while ($date < $endDate)
-			{
-				$times = $prayTime->getPrayerTimes($date, $latitude, $longitude, $timeZone);
-				$day = date('M d', $date);
-				
-				$result['result'][] = array(
+			if(!empty($_GET['month']) && !empty($_GET['day'])){
+				$month = str_pad($_GET['month'], 2, 0, STR_PAD_LEFT);
+				$day = str_pad($_GET['day'], 2, 0, STR_PAD_LEFT);
+				$result['data'] = array(
+					'method' => $calculation[$method]['name'],
+					'year' => $year,
+					'month' => $month,
 					'day' => $day,
-					'time' => array(
-						'fajr' => $times[0],
-						'sunrise' => $times[1],
-						'dhuhr' => $times[2],
-						'asr' => $times[3],
-						'sunset' => $times[4],
-						'maghrib' => $times[5],
-						'isha' => $times[6]
-					)			
+					'address' => $address,
+					'latitude' => $latitude,
+					'longitude' => $longitude,
+					'timezone' => $timeZone
 				);
 				
-				$date += 24* 60* 60;  // next day
+				$times = $prayTime->getDatePrayerTimes($year, $month, $day, $latitude, $longitude, $timeZone);
+				$result['result'] = array(
+					'fajr' => $times[0],
+					'sunrise' => $times[1],
+					'dhuhr' => $times[2],
+					'asr' => $times[3],
+					'sunset' => $times[4],
+					'maghrib' => $times[5],
+					'isha' => $times[6]
+				);
+			}else if(!empty($_GET['month']) && empty($_GET['day'])){
+				$month = str_pad($_GET['month'], 2, 0, STR_PAD_LEFT);
+				$result['data'] = array(
+					'method' => $calculation[$method]['name'],
+					'year' => $year,
+					'month' => $month,
+					'address' => $address,
+					'latitude' => $latitude,
+					'longitude' => $longitude,
+					'timezone' => $timeZone
+				);
+
+				while ($date < $endDate)
+				{
+					$times = $prayTime->getPrayerTimes($date, $latitude, $longitude, $timeZone);
+					$mon = date('m', $date);
+					$day = date('d', $date);
+					if($mon == $month){
+						$result['result'][] = array(
+							'day' => date('M', $date).' '.$day,
+							'time' => array(
+								'fajr' => $times[0],
+								'sunrise' => $times[1],
+								'dhuhr' => $times[2],
+								'asr' => $times[3],
+								'sunset' => $times[4],
+								'maghrib' => $times[5],
+								'isha' => $times[6]
+							)			
+						);
+					}
+					$date += 24* 60* 60;  // next day
+				}
+			}else{			
+				$result['data'] = array(
+					'method' => $calculation[$method]['name'],
+					'year' => $year,
+					'address' => $address,
+					'latitude' => $latitude,
+					'longitude' => $longitude,
+					'timezone' => $timeZone
+				);
+
+				while ($date < $endDate)
+				{
+					$times = $prayTime->getPrayerTimes($date, $latitude, $longitude, $timeZone);
+					$day = date('M d', $date);
+					
+					$result['result'][] = array(
+						'day' => $day,
+						'time' => array(
+							'fajr' => $times[0],
+							'sunrise' => $times[1],
+							'dhuhr' => $times[2],
+							'asr' => $times[3],
+							'sunset' => $times[4],
+							'maghrib' => $times[5],
+							'isha' => $times[6]
+						)			
+					);
+					
+					$date += 24* 60* 60;  // next day
+				}
 			}
 		}else{
 			$result['status'] = 'error';
@@ -101,5 +160,3 @@
 	echo json_encode($result, JSON_PRETTY_PRINT);
 
 ?>
-
-
