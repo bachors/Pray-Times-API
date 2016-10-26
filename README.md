@@ -1,7 +1,10 @@
 # Pray-Times-API
 Islamic Pray Times APIs.
 
-Param: <code>?address=...&timezone=...&method=...&year=...</code>
+Method: <code>api.php</code>
+Year: <code>api.php?address=bandung&timezone=7&method=0&year=2016</code>
+Month: <code>api.php?address=bandung&timezone=7&method=0&year=20166&month=2</code>
+Day: <code>api.php?address=bandung&timezone=7&method=0&year=2016&month=2&day=6</code>
 
 <a href="http://ibacor.com/api#bcr-pray-times"><h2>DEMO</h2></a>
 
